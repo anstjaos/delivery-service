@@ -1,5 +1,7 @@
 package com.delivery.api.common.api;
 
+import com.delivery.api.common.error.ErrorCode;
+import com.delivery.api.common.error.ErrorCodeInterface;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +16,35 @@ public class Result {
     private String resultMessage;
     private String resultDescription;
 
-    public static Result ok() {
+    public static Result OK() {
         return Result.builder()
-                .resultCode(200)
-                .resultMessage("OK")
+                .resultCode(ErrorCode.OK.getErrorCode())
+                .resultMessage(ErrorCode.OK.getDescription())
                 .resultDescription("성공")
+                .build();
+    }
+
+    public static Result ERROR(ErrorCodeInterface errorCodeInterface) {
+        return Result.builder()
+                .resultCode(errorCodeInterface.getErrorCode())
+                .resultMessage(errorCodeInterface.getDescription())
+                .resultDescription("에러")
+                .build();
+    }
+
+    public static Result ERROR(ErrorCodeInterface errorCodeInterface, Throwable throwable) {
+        return Result.builder()
+                .resultCode(errorCodeInterface.getErrorCode())
+                .resultMessage(errorCodeInterface.getDescription())
+                .resultDescription(throwable.getLocalizedMessage())
+                .build();
+    }
+
+    public static Result ERROR(ErrorCodeInterface errorCodeInterface, String description) {
+        return Result.builder()
+                .resultCode(errorCodeInterface.getErrorCode())
+                .resultMessage(errorCodeInterface.getDescription())
+                .resultDescription(description)
                 .build();
     }
 }
