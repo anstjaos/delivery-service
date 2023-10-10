@@ -1,6 +1,8 @@
 package com.delivery.api.domain.user.business;
 
 import com.delivery.api.common.annotation.Business;
+import com.delivery.api.domain.token.business.TokenBusiness;
+import com.delivery.api.domain.token.controller.model.TokenResponse;
 import com.delivery.api.domain.user.controller.model.UserLoginRequest;
 import com.delivery.api.domain.user.controller.model.UserRegisterRequest;
 import com.delivery.api.domain.user.controller.model.UserResponse;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class UserBusiness {
     private final UserService userService;
     private final UserConverter userConverter;
+    private final TokenBusiness tokenBusiness;
 
     public UserResponse register(UserRegisterRequest request) {
         var entity = userConverter.toEntity(request);
@@ -21,9 +24,9 @@ public class UserBusiness {
         return userConverter.toResponse(newEntity);
     }
 
-    public UserResponse login(UserLoginRequest request) {
+    public TokenResponse login(UserLoginRequest request) {
         var userEntity = userService.login(request.getEmail(), request.getPassword());
-        // TODO : 토큰 생성 로직으로 변경하기
-        return userConverter.toResponse(userEntity);
+
+        return tokenBusiness.issueToken(userEntity);
     }
 }
