@@ -29,4 +29,10 @@ public class UserBusiness {
 
         return tokenBusiness.issueToken(userEntity);
     }
+
+    public UserResponse me(Long userId) {
+        var userEntity = userService.getUserWithThrow(userId);
+
+        return userConverter.toResponse(userEntity);
+    }
 }
