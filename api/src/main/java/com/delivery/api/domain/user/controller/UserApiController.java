@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserApiController {
     private final UserBusiness userBusiness;
 
