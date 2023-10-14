@@ -27,6 +27,7 @@ public class StoreMenuConverter {
         return Optional.ofNullable(storeMenuEntity)
                 .map(it -> StoreMenuResponse.builder()
                         .id(storeMenuEntity.getId())
+                        .name(storeMenuEntity.getName())
                         .storeId(storeMenuEntity.getStoreId())
                         .amount(storeMenuEntity.getAmount())
                         .status(storeMenuEntity.getStatus())

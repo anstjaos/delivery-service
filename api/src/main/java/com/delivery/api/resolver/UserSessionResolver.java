@@ -45,6 +45,7 @@ public class UserSessionResolver implements HandlerMethodArgumentResolver {
                 .address(userEntity.getAddress())
                 .registeredAt(userEntity.getRegisteredAt())
                 .unregisteredAt(userEntity.getUnregisteredAt())
-                .lastLoginAt(userEntity.getLastLoginAt());
+                .lastLoginAt(userEntity.getLastLoginAt())
+                .build();
     }
 }
