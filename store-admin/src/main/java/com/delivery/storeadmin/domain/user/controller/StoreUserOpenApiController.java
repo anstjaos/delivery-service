@@ -1,5 +1,6 @@
 package com.delivery.storeadmin.domain.user.controller;
 
+import com.delivery.storeadmin.domain.user.business.StoreUserBusiness;
 import com.delivery.storeadmin.domain.user.controller.model.StoreUserRegisterRequest;
 import com.delivery.storeadmin.domain.user.controller.model.StoreUserResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class StoreUserOpenApiController {
 
     @PostMapping
     public StoreUserResponse register(@Valid @RequestBody StoreUserRegisterRequest request) {
-
+        var response = storeUserBusiness.register(request);
+        return response;
     }
 }

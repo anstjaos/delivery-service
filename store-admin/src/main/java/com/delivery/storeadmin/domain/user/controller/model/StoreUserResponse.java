@@ -22,7 +22,7 @@ public class StoreUserResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    static class UserResponse {
+    public static class UserResponse {
         private Long id;
 
         private String email;
@@ -42,7 +42,7 @@ public class StoreUserResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    static class StoreResponse {
+    public static class StoreResponse {
         private Long id;
 
         private String name;

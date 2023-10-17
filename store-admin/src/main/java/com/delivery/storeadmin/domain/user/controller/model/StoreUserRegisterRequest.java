@@ -1,5 +1,6 @@
 package com.delivery.storeadmin.domain.user.controller.model;
 
+import com.delivery.db.storeuser.enums.StoreUserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +16,11 @@ public class StoreUserRegisterRequest {
     private String storeName;
 
     @NotBlank
-    private String name;
+    private String email;
 
     @NotBlank
     private String password;
 
     @NotBlank
-    private String role;
+    private StoreUserRole role;
 }
