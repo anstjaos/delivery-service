@@ -10,6 +10,7 @@ import com.delivery.api.domain.userorder.controller.model.UserOrderDetailRespons
 import com.delivery.api.domain.userorder.controller.model.UserOrderRequest;
 import com.delivery.api.domain.userorder.controller.model.UserOrderResponse;
 import com.delivery.api.domain.userorder.converter.UserOrderConverter;
+import com.delivery.api.domain.userorder.producer.UserOrderProducer;
 import com.delivery.api.domain.userorder.service.UserOrderService;
 import com.delivery.api.domain.userordermenu.converter.UserOrderMenuConverter;
 import com.delivery.api.domain.userordermenu.service.UserOrderMenuService;
@@ -29,6 +30,7 @@ public class UserOrderBusiness {
     private final UserOrderMenuService userOrderMenuService;
     private final StoreService storeService;
     private final StoreConverter storeConverter;
+    private final UserOrderProducer userOrderProducer;
 
     public UserOrderResponse userOrder(User user, UserOrderRequest request) {
         var storeMenuEntityList = request.getStoreMenuIdList().stream()
@@ -42,6 +44,8 @@ public class UserOrderBusiness {
                 .map(it -> userOrderMenuConverter.toEntity(newUserOrderEntity, it))
                 .collect(Collectors.toList());
         userOrderMenuEntityList.forEach(userOrderMenuService::order);
+
+        userOrderProducer.sendOrder(newUserOrderEntity);
 
         return userOrderConverter.toResponse(newUserOrderEntity);
     }
