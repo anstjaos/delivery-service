@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,16 +22,25 @@ import java.io.IOException;
 @RequestMapping("/api/sse")
 public class SseApiController {
 
+    private static final Map<String, SseEmitter> userConnection = new ConcurrentHashMap<>();
+
     @GetMapping(path = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseBodyEmitter connect(@Parameter(hidden = true) @AuthenticationPrincipal UserSession userSession) {
         log.info("login user {}", userSession);
 
-        var emitter = new SseEmitter();
-        // 클라이언트와 타임아웃이 일어났을 때
-        emitter.onTimeout(emitter::complete);
+        var emitter = new SseEmitter(1000L * 60); // ms
+        userConnection.put(userSession.getUserId().toString(), emitter);
+
+        emitter.onTimeout(() -> {
+            log.info("on timeout");
+            // 클라이언트와 타임아웃이 일어났을 때
+            emitter.complete();
+        });
 
         emitter.onCompletion(() -> {
+            log.info("on completion");
             // 클라이언트와 연결이 종료됐을 때 하는 작업
+            userConnection.remove(userSession.getUserId().toString());
         });
 
         // 최초 연결 시 응답 전송
@@ -47,6 +58,15 @@ public class SseApiController {
 
     @GetMapping("/push-event")
     public void pushEvent(@Parameter(hidden = true) @AuthenticationPrincipal UserSession userSession) {
+        var emitter = userConnection.get(userSession.getUserId().toString());
 
+        var event = SseEmitter.event()
+                .data("hello"); // onmessage
+
+        try {
+            emitter.send(event);
+        } catch (IOException e) {
+            emitter.completeWithError(e);
+        }
     }
 }
