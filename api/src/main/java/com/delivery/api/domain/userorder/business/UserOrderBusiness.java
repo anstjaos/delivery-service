@@ -37,7 +37,7 @@ public class UserOrderBusiness {
                 .map(storeMenuService::getStoreMenuWithThrow)
                 .collect(Collectors.toList());
 
-        var userOrderEntity = userOrderConverter.toEntity(user, storeMenuEntityList);
+        var userOrderEntity = userOrderConverter.toEntity(user, request.getStoreId(), storeMenuEntityList);
         var newUserOrderEntity = userOrderService.order(userOrderEntity);
 
         var userOrderMenuEntityList = storeMenuEntityList.stream()
